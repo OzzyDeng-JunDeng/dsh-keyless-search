@@ -14,7 +14,7 @@ cd outputs/dsh-keyless-search
 git init
 git add -A
 git commit -m "dsh-keyless-search 0.1.0"
-git remote add origin git@github.com:ozzydeng/dsh-keyless-search.git
+git remote add origin git@github.com:OzzyDeng-JunDeng/dsh-keyless-search.git
 git push -u origin main
 ```
 
@@ -24,7 +24,7 @@ Then on GitHub:
 - confirm the repo is **≥ 1 day old** before opening the PR (also enforced by CI)
 
 `package.json` already points `repository` at
-`https://github.com/ozzydeng/dsh-keyless-search`, and the market reads that field
+`https://github.com/OzzyDeng-JunDeng/dsh-keyless-search`, and the market reads that field
 back to map the entry to npm — so the two must agree, and they do.
 
 ## 2. Publish to npm
@@ -73,13 +73,13 @@ The catalog is **not** crawled or keyword-matched. Listing is a one-file PR to
 ```sh
 gh repo fork awesome-dsh-plugin/awesome-dsh-plugin --clone
 cd awesome-dsh-plugin
-cp /path/to/outputs/dsh-keyless-search/publish/ozzydeng__dsh-keyless-search.yml \
-   data/plugins/ozzydeng__dsh-keyless-search.yml
+cp /path/to/outputs/dsh-keyless-search/publish/OzzyDeng-JunDeng__dsh-keyless-search.yml \
+   data/plugins/OzzyDeng-JunDeng__dsh-keyless-search.yml
 git checkout -b add-dsh-keyless-search
-git add data/plugins/ozzydeng__dsh-keyless-search.yml
-git commit -m "Add ozzydeng/dsh-keyless-search"
+git add data/plugins/OzzyDeng-JunDeng__dsh-keyless-search.yml
+git commit -m "Add OzzyDeng-JunDeng/dsh-keyless-search"
 git push -u origin add-dsh-keyless-search
-gh pr create --title "Add ozzydeng/dsh-keyless-search" \
+gh pr create --title "Add OzzyDeng-JunDeng/dsh-keyless-search" \
   --body "Keyless search provider for the built-in web_search tool."
 ```
 
@@ -87,7 +87,7 @@ Rules the entry file follows:
 
 | Rule | Status |
 | --- | --- |
-| Filename is `<owner>__<repo>.yml` | ✅ `ozzydeng__dsh-keyless-search.yml` |
+| Filename is `<owner>__<repo>.yml` | ✅ `OzzyDeng-JunDeng__dsh-keyless-search.yml` |
 | Only `description.en` is required | ✅ both `en` and `zh` written |
 | `url` matches the repo exactly | ✅ |
 | `category` from the fixed list | ✅ `browser` — the category most search providers on the list use |

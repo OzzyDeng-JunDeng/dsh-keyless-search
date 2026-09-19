@@ -1,7 +1,7 @@
 # Submission for awesome-dsh-plugin/awesome-dsh-plugin
-# Place at: data/plugins/ozzydeng__dsh-keyless-search.yml
-url: https://github.com/ozzydeng/dsh-keyless-search
-name: ozzydeng/dsh-keyless-search
+# Place at: data/plugins/OzzyDeng-JunDeng__dsh-keyless-search.yml
+url: https://github.com/OzzyDeng-JunDeng/dsh-keyless-search
+name: OzzyDeng-JunDeng/dsh-keyless-search
 category: browser
 description:
   en: 'Registers a keyless search provider for the built-in web_search tool so it works without an API key, failing over between the documented no-key tiers of Tavily and Firecrawl; a TAVILY_API_KEY or FIRECRAWL_API_KEY is picked up automatically when present. Two Bing scrape backends are included but off by default.'
