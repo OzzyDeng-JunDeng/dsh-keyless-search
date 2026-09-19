@@ -141,10 +141,12 @@ variables are refused from `.env`, but a proxy is deliberately exempted.
 So the fix is two lines, no code:
 
 ```bash
-# ~/.dsh/.env
+# ~/.dsh/.env — point these at your own local proxy's address and port
 HTTP_PROXY=http://127.0.0.1:7897
 HTTPS_PROXY=http://127.0.0.1:7897
 ```
+
+(`7897` is a port Clash-style proxies commonly use; substitute your own.)
 
 Verified: the **unmodified** shipped provider then fetches public sites while
 still blocking `127.0.0.1`, `169.254.169.254`, and RFC1918 literals.
