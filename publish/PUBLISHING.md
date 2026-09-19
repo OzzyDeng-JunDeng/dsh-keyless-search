@@ -35,10 +35,7 @@ field back to map the entry to npm — so the two must agree, and they do.
 > (`gh auth logout` / `git config --global --unset-all ...`) if you want git to
 > stop using it.
 
-## 2. Publish to npm — ⏸ held back
-
-Do this only once the repo is public; the package must not exist on npm before
-you are ready for it to be installable by anyone.
+## 2. Publish to npm — ✅ done (0.1.0, 2026-09-19)
 
 ```sh
 npm publish --access public
@@ -51,6 +48,39 @@ the bundle installs with no patch layer at all:
 npm pack --dry-run
 # expect: lib/index.js, cordis.patch.yml, package.json, README.md, README.zh.md, LICENSE
 ```
+
+### The credential this needs (learned the hard way — three attempts)
+
+npm refuses to publish without **either** an interactive OTP **or** a granular
+token that bypasses 2FA. A plain session login is not enough, and the failure is
+a bare `403` that reads like a permissions problem rather than a policy one:
+
+```
+403 Forbidden - Two-factor authentication or granular access token with bypass 2fa enabled is required to publish packages.
+```
+
+Two traps, both of which cost a failed attempt here:
+
+| Setting | Wrong choice | Right choice |
+| --- | --- | --- |
+| Bypass 2FA | unchecked → same 403 as above | **checked** |
+| Permissions | `Read and write (stage only)` → `E_STAGE_REQUIRED` | **`Read and write`** |
+
+A stage-only token cannot create a *new* package at all: staging requires the
+package to already exist, and this one does not, so `npm stage publish` fails too
+— there is no workaround. See [About access tokens](https://docs.npmjs.com/about-access-tokens).
+
+When using a token, keep it off disk: write it to a `mktemp` file (mode 600) and
+pass `--userconfig`, rather than editing `~/.npmrc`. Delete the file right after.
+Note that npm's own web login does write `~/.npmrc`; a token-based publish need not.
+
+`0.1.0` published as `dsh-keyless-search`, maintainer `ozzydeng-jundeng`, shasum
+`95657576bb35a7a08d3ed86ca2dc8de83cb466a7`. Bump the version before republishing;
+a published version can never be reused.
+
+> Registry reads are eventually consistent. A `npm view` immediately after
+> publishing can 404 for a short while even though the publish succeeded — check
+> again before assuming failure.
 
 ## 3. Verify the install works — ✅ done
 
@@ -76,7 +106,7 @@ Verified locally with a tarball install into a fresh profile: `dsh plugin add`
 appended the package to `dsh.profile.bundles`, the composed tree showed the row
 above, and `web.search({query})` returned results with no profile patch at all.
 
-## 4. Submit to the market — ⏸ held back
+## 4. Submit to the market — ⏸ waiting on the 1-day age gate
 
 The catalog is **not** crawled or keyword-matched. Listing is a one-file PR to
 [`awesome-dsh-plugin/awesome-dsh-plugin`](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin):
@@ -93,6 +123,14 @@ git push -u origin add-dsh-keyless-search
 gh pr create --title "Add OzzyDeng-JunDeng/dsh-keyless-search" \
   --body "Keyless search provider for the built-in web_search tool."
 ```
+
+Two gates block this until **2026-09-20 14:39 UTC** (22:39 CST). The repo was
+created `2026-09-19T14:39:43Z` and `scripts/check-submission.mjs` enforces
+`MIN_AGE_DAYS = 1`. Per the gate's own text, nothing needs to be done — `regate.yml`
+re-runs every 6 hours and the check clears by itself; **do not resubmit**. The
+other gate: the CI reads the repo with a `GITHUB_TOKEN` scoped to
+`awesome-dsh-plugin` only, so a private repo fails as `repository not found`.
+The repo is public now, so that one is satisfied.
 
 Rules the entry file follows:
 

@@ -16,7 +16,8 @@
 dsh plugin --profile <your-profile> add dsh-keyless-search
 ```
 
-这就是全部安装步骤。本包声明了 `dsh.bundle`，因此 `dsh plugin add` 会把它追加到
+这就是全部安装步骤。本包已发布到 npm：[`dsh-keyless-search`](https://www.npmjs.com/package/dsh-keyless-search)。
+它声明了 `dsh.bundle`，因此 `dsh plugin add` 会把它追加到
 `dsh.profile.bundles` 中——位置在 `@deepseek-ai/dsh-base` **之后**，这正是它覆盖
 `web` 那一行能生效的原因。**不需要手改任何 YAML。** 新开一个会话即可验证：提供方会在会话启动、工具列表组装时注册。
 

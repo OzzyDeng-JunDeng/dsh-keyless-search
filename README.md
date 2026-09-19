@@ -19,10 +19,12 @@ This bundle registers a keyless provider and repoints the seam at it.
 dsh plugin --profile <your-profile> add dsh-keyless-search
 ```
 
-That is the whole install. The package declares `dsh.bundle`, so `dsh plugin add`
-appends it to `dsh.profile.bundles` — after `@deepseek-ai/dsh-base`, which is why
-its `web` row override wins. **No YAML editing is required.** Verify in a new
-session: the provider registers at session start, when the tool list is composed.
+That is the whole install. The package is on npm as
+[`dsh-keyless-search`](https://www.npmjs.com/package/dsh-keyless-search), and it
+declares `dsh.bundle`, so `dsh plugin add` appends it to `dsh.profile.bundles` —
+after `@deepseek-ai/dsh-base`, which is why its `web` row override wins. **No YAML
+editing is required.** Verify in a new session: the provider registers at session
+start, when the tool list is composed.
 
 To remove it:
 
