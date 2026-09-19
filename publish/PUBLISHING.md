@@ -49,7 +49,7 @@ the bundle installs with no patch layer at all:
 
 ```sh
 npm pack --dry-run
-# expect: lib/index.js, cordis.patch.yml, package.json, README.md, LICENSE
+# expect: lib/index.js, cordis.patch.yml, package.json, README.md, README.zh.md, LICENSE
 ```
 
 ## 3. Verify the install works — ✅ done

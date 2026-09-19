@@ -1,5 +1,7 @@
 # dsh-keyless-search
 
+English | [中文](README.zh.md)
+
 Keyless web search for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).
 
 Makes the built-in `web_search` tool work with **no API key, no account, and no
