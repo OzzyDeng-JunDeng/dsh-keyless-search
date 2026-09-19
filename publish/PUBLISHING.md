@@ -106,7 +106,7 @@ Verified locally with a tarball install into a fresh profile: `dsh plugin add`
 appended the package to `dsh.profile.bundles`, the composed tree showed the row
 above, and `web.search({query})` returned results with no profile patch at all.
 
-## 4. Submit to the market — ⏸ waiting on the 1-day age gate
+## 4. Submit to the market — ✅ submitted as PR #5458, gate clears itself
 
 The catalog is **not** crawled or keyword-matched. Listing is a one-file PR to
 [`awesome-dsh-plugin/awesome-dsh-plugin`](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin):
@@ -124,13 +124,45 @@ gh pr create --title "Add OzzyDeng-JunDeng/dsh-keyless-search" \
   --body "Keyless search provider for the built-in web_search tool."
 ```
 
-Two gates block this until **2026-09-20 14:39 UTC** (22:39 CST). The repo was
-created `2026-09-19T14:39:43Z` and `scripts/check-submission.mjs` enforces
-`MIN_AGE_DAYS = 1`. Per the gate's own text, nothing needs to be done — `regate.yml`
-re-runs every 6 hours and the check clears by itself; **do not resubmit**. The
-other gate: the CI reads the repo with a `GITHUB_TOKEN` scoped to
-`awesome-dsh-plugin` only, so a private repo fails as `repository not found`.
-The repo is public now, so that one is satisfied.
+Opened as **https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/5458**
+on 2026-09-19: one file, 6 added lines, `check` **pass**, `Submission gate`
+**fail on the age bar only** (verified from the gate's own summary).
+
+The gate fails until the repository is one day old. **Do not push, resubmit, or
+reopen** — `regate.yml` re-runs the check by itself every 6 hours, but only once
+24h have passed since the previous gate run, so the two clocks both have to be
+past:
+
+| Clock | Clears |
+| --- | --- |
+| Repository age ≥ 1 day | 2026-09-20 14:39 UTC (22:39 CST) |
+| regate's 24h re-run cooldown | 2026-09-20 15:25 UTC (23:25 CST) |
+| Next matching regate pass | **2026-09-21 02:19 CST** — the 18:19Z run |
+
+The first three regate passes on 09-20 are all too early (08:19, 14:19, 20:19 CST);
+the 20:19 CST one still sees a 0.90-day-old repo. So the realistic green is the
+small hours of 09-21, not the evening of 09-20.
+
+The other gate — the CI reads the repo with a `GITHUB_TOKEN` scoped to
+`awesome-dsh-plugin` only, so a private repo fails as `repository not found` —
+is satisfied, because the repo is public.
+
+### Reproducing the gate locally
+
+Worth doing before opening the PR: it tells you whether anything *besides* age
+is wrong, which the remote run cannot (everything fails together).
+
+```sh
+cd awesome-dsh-plugin
+npm install --include=dev        # see note below
+export GITHUB_TOKEN=$(gh auth token)
+node scripts/check-submission.mjs --base origin/main
+```
+
+`npm ci` silently installed nothing here because this machine's npm config sets
+`omit=dev` and both dependencies are devDependencies — `--include=dev` is
+required, and without it the script dies on `Cannot find package 'js-yaml'`.
+Just use `npm install`, not `npm ci`.
 
 Rules the entry file follows:
 
