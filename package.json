@@ -1,0 +1,19 @@
+{
+  "name": "dsh-keyless-search",
+  "version": "0.1.0",
+  "description": "Keyless web search for the DeepSeek Harness web_search tool — Tavily and Firecrawl no-key access, no account or configuration.",
+  "license": "MIT",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml"
+  },
+  "engines": { "node": ">=18" },
+  "files": ["lib", "cordis.patch.yml", "README.md", "LICENSE"],
+  "keywords": ["deepseek-harness", "dsh", "dsh-plugin", "web-search", "keyless", "tavily", "firecrawl"],
+  "repository": { "type": "git", "url": "git+https://github.com/ozzydeng/dsh-keyless-search.git" },
+  "peerDependencies": { "@deepseek-ai/dsh-web": "*" },
+  "peerDependenciesMeta": { "@deepseek-ai/dsh-web": { "optional": true } },
+  "dsh": { "bundle": { "patch": "./cordis.patch.yml" } }
+}

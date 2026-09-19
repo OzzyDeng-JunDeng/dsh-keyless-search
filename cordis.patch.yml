@@ -1,0 +1,22 @@
+# dsh bundle patch: compose this bundle into a profile's layer stack.
+#
+# `dsh plugin --profile <name> add dsh-keyless-search` appends this package to
+# `dsh.profile.bundles`, so this layer is applied AFTER @deepseek-ai/dsh-base
+# and therefore wins the `web` row below. Nothing here needs hand-editing.
+- id: web
+  config:
+    # Repin the search provider to the keyless one. `name:` is deliberately
+    # omitted: on an override patch it is only an assertion, and a mismatch
+    # silently skips the patch. A patch replaces the whole `config` object, so
+    # every key the base row set is restated, including `fetchProvider`.
+    searchProvider: keyless-search
+    fetchProvider: http
+
+- insert:
+    - id: keyless-search
+      name: dsh-keyless-search
+      config:
+        # Documented keyless backends, tried in order. See README before adding
+        # the opt-in bing-rss / bing-html backends.
+        searchBackends: tavily,firecrawl
+        timeoutMs: 15000
