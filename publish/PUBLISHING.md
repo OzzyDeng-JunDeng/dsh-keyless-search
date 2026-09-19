@@ -1,33 +1,44 @@
 # Publishing dsh-keyless-search
 
-Everything below was verified locally against DSH `0.1.6-alpha.2`. Steps 1–3 are
-done in this workspace; steps 4–6 are what remains, and they need network writes
-to GitHub/npm, which is why they are not done here.
+Everything below was verified locally against DSH `0.1.6-alpha.2`.
 
-## 1. Push the repo
+**Status:** steps 1 and 3 are done. Step 1 created the repository as **private**
+(`OzzyDeng-JunDeng/dsh-keyless-search`) so the source can be reviewed before it is
+made public. Steps 2 and 4 are deliberately not done yet — publishing to npm or
+opening the market PR would make the package public, which is the decision being
+held back. Flip the repository to public first, then work through what remains.
 
-The package lives at `outputs/dsh-keyless-search/`. It is already a complete,
-publishable npm package — no build step, `lib/index.js` is the shipped artifact.
+## 1. Push the repo — ✅ done
+
+The package lives at `outputs/dsh-keyless-search/`. It is a complete, publishable
+npm package — no build step, `lib/index.js` is the shipped artifact.
+
+Created with:
 
 ```sh
-cd outputs/dsh-keyless-search
-git init
-git add -A
-git commit -m "dsh-keyless-search 0.1.0"
-git remote add origin git@github.com:OzzyDeng-JunDeng/dsh-keyless-search.git
-git push -u origin main
+gh repo create OzzyDeng-JunDeng/dsh-keyless-search --private --source=. --push
+gh repo edit OzzyDeng-JunDeng/dsh-keyless-search --add-topic dsh-plugin
 ```
 
-Then on GitHub:
+Verified after the push: `visibility: PRIVATE`, `defaultBranchRef: main`, local
+`HEAD` and `origin/main` at the same commit, working tree clean. The `dsh-plugin`
+topic is set; the repo-age requirement (≥ 1 day) is satisfied by letting the repo
+sit before opening the PR.
 
-- add the **`dsh-plugin`** topic (required by the market's CI)
-- confirm the repo is **≥ 1 day old** before opening the PR (also enforced by CI)
+`package.json` points `repository` at
+`https://github.com/OzzyDeng-JunDeng/dsh-keyless-search`, and the market reads that
+field back to map the entry to npm — so the two must agree, and they do.
 
-`package.json` already points `repository` at
-`https://github.com/OzzyDeng-JunDeng/dsh-keyless-search`, and the market reads that field
-back to map the entry to npm — so the two must agree, and they do.
+> Note: the harness wrote `git config --global credential.https://github.com.helper`
+> via `gh auth setup-git`, so `git push` to this account now authenticates through
+> the `gh` token in the macOS keyring. Remove those entries
+> (`gh auth logout` / `git config --global --unset-all ...`) if you want git to
+> stop using it.
 
-## 2. Publish to npm
+## 2. Publish to npm — ⏸ held back
+
+Do this only once the repo is public; the package must not exist on npm before
+you are ready for it to be installable by anyone.
 
 ```sh
 npm publish --access public
@@ -41,7 +52,7 @@ npm pack --dry-run
 # expect: lib/index.js, cordis.patch.yml, package.json, README.md, LICENSE
 ```
 
-## 3. Verify the install works before submitting
+## 3. Verify the install works — ✅ done
 
 This is the step that matters, because it proves the claim the README makes:
 
@@ -65,7 +76,7 @@ Verified locally with a tarball install into a fresh profile: `dsh plugin add`
 appended the package to `dsh.profile.bundles`, the composed tree showed the row
 above, and `web.search({query})` returned results with no profile patch at all.
 
-## 4. Submit to the market
+## 4. Submit to the market — ⏸ held back
 
 The catalog is **not** crawled or keyword-matched. Listing is a one-file PR to
 [`awesome-dsh-plugin/awesome-dsh-plugin`](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin):
