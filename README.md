@@ -165,7 +165,7 @@ neither introduces nor fixes it.
 
 ## Requirements
 
-- Node ≥ 18 (for `fetch`, `AbortSignal.any`, `AbortSignal.timeout`)
+- Node ≥ 18 (for `fetch` and `AbortSignal.timeout`)
 - A DSH profile that composes `@deepseek-ai/dsh-base`
 
 ## License

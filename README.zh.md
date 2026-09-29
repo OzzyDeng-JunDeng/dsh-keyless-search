@@ -131,7 +131,7 @@ HTTPS_PROXY=http://127.0.0.1:7897
 
 ## 环境要求
 
-- Node ≥ 18（需要 `fetch`、`AbortSignal.any`、`AbortSignal.timeout`）
+- Node ≥ 18（需要 `fetch`、`AbortSignal.timeout`）
 - 一个组合了 `@deepseek-ai/dsh-base` 的 DSH profile
 
 ## 许可证

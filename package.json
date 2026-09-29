@@ -1,6 +1,6 @@
 {
   "name": "dsh-keyless-search",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Keyless web search for the DeepSeek Harness web_search tool — Tavily and Firecrawl no-key access, no account or configuration.",
   "license": "MIT",
   "type": "module",
