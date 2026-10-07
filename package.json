@@ -15,5 +15,6 @@
   "repository": { "type": "git", "url": "git+https://github.com/OzzyDeng-JunDeng/dsh-keyless-search.git" },
   "peerDependencies": { "@deepseek-ai/dsh-web": "*" },
   "peerDependenciesMeta": { "@deepseek-ai/dsh-web": { "optional": true } },
+  "scripts": { "test": "node --test" },
   "dsh": { "bundle": { "patch": "./cordis.patch.yml" } }
 }
