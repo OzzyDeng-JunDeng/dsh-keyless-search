@@ -108,11 +108,65 @@ hint is omitted, because a keyed request must not carry it.
   a profile that resolves none of the harness packages. Its only runtime import
   is `@deepseek-ai/dsh-web` for the error class, with a shape-compatible
   fallback.
+- **Its own text is hardened.** Everything page-controlled is escaped before the
+  consumer formats it, so page content cannot break the line the consumer owns or
+  replay the consumer's own framing — see
+  [Untrusted provider text](#untrusted-provider-text). Ordinary prose passes
+  through byte for byte.
 
 ## Scope
 
 This bundle registers a **search** provider only. It does not touch `web_fetch`
 and ships no fetch provider.
+
+### Untrusted provider text
+
+The consumer (`dsh-tool-web`) splices provider text into a line it owns:
+
+```
+- [<title>](<url>) — <snippet> (<publishedAt>)
+```
+
+and escapes none of it. The title and the snippet both come from a web page, so
+page content can break that line — a title of `Legit title](https://evil.example)`
+makes the renderer emit a second link and retarget the citation — and the same
+text sits beside the consumer's own framing sentences, which it can replay
+verbatim. The consumer already marks its results untrusted; what it cannot do is
+stop provider text from breaking the framing it is marked with.
+
+So the provider hardens what it contributes, once, at the provider boundary:
+every backend goes through it, so the failover chain cannot route around it.
+
+**What it does.** Each field is normalized, stripped of the consumer's framing
+sentences (replaced with `«text withheld»`), and escaped for the eight characters
+that can *begin* an inline construct — `` \ ` [ ] < * _ ~ ``. Escaping is
+lossless: each escape renders as the character it guards, so
+`A function (from a set to a set) is a relation.` reaches the reader unchanged.
+`*` and `_` are escaped because emphasis consumes its own delimiters, which would
+otherwise let a page delete characters from the text. Parentheses are deliberately
+*not* escaped — they cannot begin a construct on this line, and escaping them would
+lace ordinary prose with backslashes. URLs get `( ) [ ]` percent-encoded, because
+an unbalanced `)` in a destination is what lets a crafted URL close the link
+early and open a second one. The snippet is then wrapped in
+`⟦UNTRUSTED-WEB backend=<name>⟧ … ⟧` — inline and single-line, because the
+consumer's list is line-oriented and a boundary carrying a newline would break the
+format it exists to protect. The title stays bare: it is the visible link text, so
+a boundary there would put marker noise on every citation. The URL stays outside
+the boundary, because the consumer instructs the model to cite it.
+
+**What it does not do.** It stops structural forgery: breaking the line,
+injecting raw HTML, an image or a code span, retargeting a link, or impersonating
+the consumer's framing. It does **not** stop semantic misdirection — a persuasive
+snippet is still read as text, and a reworded instruction is not recognized. A
+bare URL inside a snippet is still autolinked, because GFM resolves escapes before
+it looks for URLs; only invisible characters or mangling the URL would prevent
+that, and neither is worth the cost. Nor does it cover other providers or
+`web_fetch`: the durable fix belongs in the consumer's formatter, where one change
+would cover every provider at once.
+
+Each claim above is a test in `test/hardening.test.js`, which parses the
+consumer's line with the consumer's own grammar (mdast + GFM) instead of
+asserting on substrings of the hardened string.
 
 If `web_fetch` fails on your machine with `resolves to a non-public IP address`,
 that is a separate issue with your local network setup, and the fix is
