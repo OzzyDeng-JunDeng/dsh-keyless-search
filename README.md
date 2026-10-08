@@ -164,6 +164,16 @@ that, and neither is worth the cost. Nor does it cover other providers or
 `web_fetch`: the durable fix belongs in the consumer's formatter, where one change
 would cover every provider at once.
 
+**If the consumer starts escaping its own line.** Both layers must not escape.
+The escaping above exists only because the formatter today escapes nothing, and
+backslash escaping is not idempotent in effect — applying it twice shows the
+backslashes to the reader. The change that belongs in the consumer is the same
+one, one place, covering every provider: escape the label, snippet and date, and
+percent-encode the destination. When that lands, this provider's escape step and
+URL encoding should be **deleted**, not left in place; the boundary and the
+framing handling stay, because the consumer still cannot stop provider text from
+replaying its own framing sentences.
+
 Each claim above is a test in `test/hardening.test.js`, which parses the
 consumer's line with the consumer's own grammar (mdast + GFM) instead of
 asserting on substrings of the hardened string.
